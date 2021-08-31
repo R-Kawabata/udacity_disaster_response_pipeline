@@ -43,12 +43,12 @@ def clean_data(df):
     
     # get categories columns values
     for column in categories:
-    # set each value to be the last character of the string
-    categories[column] = [(lambda categories : value_str.split('-')[1])(value_str) 
-                          for label, value_str in categories[column].iteritems()]
+        # set each value to be the last character of the string
+        categories[column] = [(lambda categories : value_str.split('-')[1])(value_str) \
+                              for label, value_str in categories[column].iteritems()]
     
-    # convert column from string to numeric
-    categories[column] = categories[column].astype(int)
+        # convert column from string to numeric
+        categories[column] = categories[column].astype(int)
     
     # drop the original categories column from `df`
     df.drop(columns='categories', inplace=True)
@@ -58,6 +58,9 @@ def clean_data(df):
     
     # remove duplicated data
     df.drop_duplicates(subset=['message', 'original'], inplace=True)
+    
+    # remove value 2 from related column
+    df = df.loc[df['related'] != 2]
     
     return df
     
@@ -71,7 +74,7 @@ def save_data(df, database_filename):
     input data set
     """
     engine = create_engine('sqlite:///' + database_filename)
-    df.to_sql(database_filename[:-3], engine, index=False, if_exists='replace')
+    df.to_sql(database_filename[:-3]+"_table", engine, index=False, if_exists='replace')
 
 
 def main():
