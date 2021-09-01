@@ -48,3 +48,4 @@ In order to reach the objective, it was necessary to:
 3. Go to http://0.0.0.0:3001/
 
 ## Results
+![](img_samples/web_application_sample.JPG)
