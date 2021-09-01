@@ -3,7 +3,6 @@ import sys
 import numpy as np
 import pandas as pd
 import pickle
-import matplotlib.pyplot as plt
 
 from sqlalchemy import create_engine
 from nltk.tokenize import word_tokenize
