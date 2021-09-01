@@ -5,7 +5,9 @@ from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
     """
-    description: receives 2 data sets, message and categories,
+
+    description:
+    receives 2 data sets, message and categories,
     and merge them to one data set.
     
     Inputs:
@@ -13,7 +15,7 @@ def load_data(messages_filepath, categories_filepath):
     categories_filepath: a csv file path containing the category data set
     
     Output:
-    df: a merged data set using the input data set
+    a merged data set using the input data set
    
     """
     messages = pd.read_csv(messages_filepath)
@@ -26,11 +28,15 @@ def load_data(messages_filepath, categories_filepath):
 
 def clean_data(df):
     """
-    description: Data cleaning function
 
-    Inputs: a merged data frame (message + category)
+    description:
+    Data cleaning function
 
-    Output: cleaned data frame
+    Inputs:
+    df: a merged data frame (message + category)
+
+    Output:
+    cleaned data frame
 
     """    
     # get right categories column name
@@ -66,12 +72,18 @@ def clean_data(df):
     
 def save_data(df, database_filename):
     """
-    description: it saves the data set to sql database file
     
-    Inputs: a merged data frame (message + category)
+    description:
+    it saves the data set to sql database file
     
-    output: creates a sql database file, containing the data from
+    Inputs:
+    df: a merged data frame (message + category)
+    database_filename: a name for the databse file
+    
+    output:
+    creates a sql database file, containing the data from
     input data set
+
     """
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('DisasterResponse', engine, index=False, if_exists='replace')

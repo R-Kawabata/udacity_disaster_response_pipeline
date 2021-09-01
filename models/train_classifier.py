@@ -22,6 +22,21 @@ import nltk
 nltk.download(['punkt', 'wordnet', 'averaged_perceptron_tagger'])
 
 def load_data(database_filepath):
+    """
+    
+    description:
+    it reads a SQL database and load it to a pandas data frame.
+    After that, it extract the X and Y data to train and test the
+    ML model. Also, it gets the column names.
+
+    input:
+    database_filepath: a file path for the database file
+
+    output:
+    X and Y: the data for ML model
+    category_list: a list of column names
+
+    """
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql_query('SELECT * FROM DisasterResponse', engine)
     X = df['message']
@@ -31,6 +46,18 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """
+
+    description:
+    clean, tokenize and lemmatize the input text string
+
+    input:
+    text: inpput text
+
+    output:
+    clear_tokens: list of tokens
+
+    """
     url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     url_list = re.findall(url_regex, text)
     
@@ -49,7 +76,16 @@ def tokenize(text):
 
 
 def build_model():
-    
+    """
+
+    description:
+    it creates a ml pipeline, and set parameters and
+    a model to be used later
+
+    output:
+    Machine learning model
+
+    """
     pipeline = Pipeline([
     ('vect',CountVectorizer(tokenizer=tokenize)),
     ('tfidf',TfidfTransformer()),
@@ -67,6 +103,20 @@ def build_model():
     return cv
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    
+    description:
+
+    input:
+    model: ML model
+    X_test and Y_test: test data
+    category_names: list of class names
+
+    output:
+    precision, recall, f1-score and accuracy for each class,
+    and an average accuracy of the ML model
+
+    """
     y_pred = model.predict(X_test)
     average_accuracy = 0
     print(classification_report(Y_test, y_pred, target_names = category_names))
@@ -74,10 +124,21 @@ def evaluate_model(model, X_test, Y_test, category_names):
         class_acc = accuracy_score(Y_test.iloc[:, i].values, y_pred[:, i])
         average_accuracy += class_acc
         print('category {}: {:.3f}'.format(category_names[i], class_acc))
-    print('\n average accuracy: {}'.format(average_accuracy/len(category_names)))
+    print('\n')
+    print('average accuracy: {}'.format(average_accuracy/len(category_names)))
 
 
 def save_model(model, model_filepath):
+    """
+    
+    description:
+    it saves the trained ML model
+
+    input:
+    model: ML model
+    model_filepath: file path and pikles file name to save the ml model
+    
+    """
     pickle.dump(model, open(model_filepath, 'wb'))
 
 def main():
